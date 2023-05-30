@@ -45,7 +45,6 @@ class LoginAdminController extends Controller
             $this->hasTooManyLoginAttempts($request)
         ) {
             $this->fireLockoutEvent($request);
-
             return $this->sendLockoutResponse($request);
         }
 
@@ -55,7 +54,6 @@ class LoginAdminController extends Controller
             $this->incrementLoginAttempts($request);
             return back()->with('error_message', 'Email hoặc mật khẩu k chính xác');
         }
-//        $this->incrementLoginAttempts($request);
         return back();
     }
 

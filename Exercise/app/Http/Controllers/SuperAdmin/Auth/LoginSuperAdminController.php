@@ -18,18 +18,18 @@ class LoginSuperAdminController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest:superAdmin')->except('logout');
+        $this->middleware('guest:super-admin')->except('logout');
     }
 
     protected function guard()
     {
-        return Auth::guard('superAdmin');
+        return Auth::guard('super-admin');
     }
 
     public function showLoginForm()
     {
         $this->guard()->logout();
-        return view('superAdmin.auth.login');
+        return view('super-admin.auth.login');
     }
 
     public function login(Request $request)
@@ -44,22 +44,16 @@ class LoginSuperAdminController extends Controller
             $this->hasTooManyLoginAttempts($request)
         ) {
             $this->fireLockoutEvent($request);
-
             return $this->sendLockoutResponse($request);
         }
 
-        $superAdmin = Super_Admin::where('email', $data['email'])->first();
-        if ($superAdmin->block) {
-            $this->incrementLoginAttempts($request);
-            return back()->with('error_message', 'id was blocked');
-        }
+
         if ($this->guard()->attempt(['email' => $data['email'], 'password' => $data['password']])) {
-            return redirect()->route('superAdmin.home');
+            return redirect()->route('super-admin.home');
         } else {
             $this->incrementLoginAttempts($request);
             return back()->with('error_message', 'Email hoặc mật khẩu k chính xác');
         }
-//        $this->incrementLoginAttempts($request);
         return back();
     }
 
@@ -71,6 +65,6 @@ class LoginSuperAdminController extends Controller
 
     public function loggedOut(Request $request): RedirectResponse
     {
-        return redirect(route('superAdmin.login'));
+        return redirect(route('super-admin.login'));
     }
 }

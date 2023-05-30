@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
     <div class="container">
@@ -8,7 +8,7 @@
                     <div class="alert alert-danger" style="font-size: 16px">{{session()->get('error_message')}}</div>
                 @endif
                 <div class="card">
-                    <div class="card-header">{{ __('Login') }}</div>
+                    <div class="card-header">{{ __('Admin Account Login Form') }}</div>
 
                     <div class="card-body">
                         <form method="POST" action="{{ route('admin.login') }}">

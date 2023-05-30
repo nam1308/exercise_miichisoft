@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\User\MailController;
 use App\Http\Controllers\directionalController;
 use App\Http\Controllers\Admin\AdminHomeController;
 use App\Http\Controllers\Admin\Auth\LoginAdminController;
@@ -26,8 +27,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+//Route::group(['prefix' => 'user', 'middleware' => 'auth:user'], function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+//});
 
 // Admin
 Route::group(['prefix' => 'admin'], function () {
@@ -39,7 +41,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'guest:admin'], function () {
     Route::get('login',[LoginAdminController::class, 'showLoginForm'])->name('admin.showLoginForm');
     Route::post('login',[LoginAdminController::class, 'login'])->name('admin.login');
 });
-Auth::routes();
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::get('/', [AdminHomeController::class, 'index'])->name('admin.home');
@@ -47,20 +48,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
 
 // superAdmin
-Route::group(['prefix' => 'superAdmin'], function () {
-    Route::get('register/{token}',[RegisterSuperAdminController::class, 'showRegistrationForm'])->name('superAdmin.register.showForm');
-    Route::post('register/store', [RegisterSuperAdminController::class, 'store'])->name('superAdmin.register.store');
+Route::group(['prefix' => 'super-admin'], function () {
+    Route::get('register',[RegisterSuperAdminController::class, 'showRegistrationForm'])->name('super-admin.register.showForm');
+    Route::post('register/store', [RegisterSuperAdminController::class, 'store'])->name('super-admin.register.store');
 });
 
-Route::group(['prefix' => 'superAdmin', 'middleware' => 'guest:superAdmin'], function () {
-    Route::get('login',[LoginSuperAdminController::class, 'showLoginForm'])->name('superAdmin.showLoginForm');
-    Route::post('login',[LoginSuperAdminController::class, 'login'])->name('superAdmin.login');
+Route::group(['prefix' => 'super-admin', 'middleware' => 'guest:super-admin'], function () {
+    Route::get('login',[LoginSuperAdminController::class, 'showLoginForm'])->name('super-admin.showLoginForm');
+    Route::post('login',[LoginSuperAdminController::class, 'login'])->name('super-admin.login');
+});
+
+Route::group(['prefix' => 'super-admin', 'middleware' => 'auth:super-admin'], function () {
+    Route::get('/', [HomeSuperAdminController::class, 'index'])->name('super-admin.home');
 });
 Auth::routes();
-
-Route::group(['prefix' => 'superAdmin', 'middleware' => 'auth:superAdmin'], function () {
-    Route::get('/', [HomeSuperAdminController::class, 'index'])->name('superAdmin.home');
-});
-
 
 

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\SuperAdmin\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SuperAdminMail;
 use App\Providers\RouteServiceProvider;
 use App\Models\Super_Admin;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Mail;
 
 class RegisterSuperAdminController extends Controller
 {
@@ -24,7 +26,7 @@ class RegisterSuperAdminController extends Controller
 
     public function showRegistrationForm()
     {
-        return view('superAdmin.auth.register');
+        return view('super-admin.auth.register');
     }
 
     protected function validator(array $data)
@@ -58,7 +60,10 @@ class RegisterSuperAdminController extends Controller
             'password' => Hash::make($request['password']),
         ]);
 
-        return redirect()->route('superAdmin.home');
+        // Send mail
+        Mail::to($data['email'])->send(new SuperAdminMail($data));
+
+        return redirect()->route('super-admin.home');
     }
 
     protected function guard()
